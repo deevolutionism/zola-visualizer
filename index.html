@@ -3,52 +3,27 @@
     <head>
         <meta charset="utf-8">
         <style>
-        @font-face {
-            font-family: 'Blackout';
-            src: url('/static/Blackout.ttf') format('ttf')
-        }
-        body {
-            margin: 0;
-        }
-
-
-
-        .vz-wrapper {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-            background: -webkit-gradient(radial, center center, 0, center center, 460, from(#396362), to(#000000));
-            background: -webkit-radial-gradient(circle, #396362, #000000);
-            background: -moz-radial-gradient(circle, #396362, #000000);
-            background: -ms-radial-gradient(circle, #396362, #000000);
-            box-shadow: inset 0 0 160px 0 #000;
-            cursor: pointer;
-        }
-
-        .vz-wrapper.-canvas {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            height: initial;
-            width: initial;
-            background: transparent;
-            box-shadow: none;
-        }
-
-        @media screen and (min-width: 420px) {
-            .vz-wrapper {
-                box-shadow: inset 0 0 200px 60px #000;
+            @font-face {
+                font-family: 'Blackout';
+                src: url('/static/Blackout.ttf') format('ttf')
             }
-        }
+            body {
+                margin: 0;
+            }
+            @media screen and (min-width: 420px) {
+                .vz-wrapper {
+                    box-shadow: inset 0 0 200px 60px #000;
+                }
+            }
         </style>
     </head>
     <body>
         <control-panel>
             <slider-param name="radius" param-name="radius" value="0" min="50" max="1000"></slider-param>
             <slider-param name="bar width" param-name="barWidth" value="0" min="1" max="10"></slider-param>
+            <drop-down options="vizStyles"></drop-down>
         <control-panel connect="viz-1">
-        <music-viz id="viz-1"></music-viz>
+        <music-viz id="viz-1" img-src="static/IDL-3K.jpg" audio-src="static/i-dont-like-teaser-1.wav"></music-viz>
 
         <template id="control-panel">
             <style>

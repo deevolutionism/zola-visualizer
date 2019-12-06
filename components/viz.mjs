@@ -1,4 +1,4 @@
-let AV;
+import visualizer from '../visualizer.mjs'
 
 
 let lounge_default = {
@@ -13,12 +13,14 @@ let lounge_default = {
     shadowColor: '#ffffff',
 }
 
-function start() {
-    
-}
-
 const template = document.createElement('template')
 template.innerHTML = `
+<style>
+    #container {
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+</style>
 <div id="container">
     <audio id="audio" src=""></audio>
     <canvas id="canvas" width="1024" height="1024"></canvas>
@@ -35,16 +37,27 @@ class Viz extends HTMLElement {
         this.audio = this._shadowRoot.querySelector('#audio')
         this.canvas = this._shadowRoot.querySelector('#canvas')
         this.container = this._shadowRoot.querySelector('#container')
-        this.container.addEventListener('click', () => this.initVisualizer)
+        
+        this.handleClick = this.handleClick.bind(this)
+        this.onclick = this.handleClick
+
+        this.container.style.backgroundImage = `url(${this.getAttribute('img-src')})`
+        this.audio.src = this.getAttribute('audio-src')
+        this.AV = null
+    }
+
+    handleClick() {
+        console.log('click')
+        this.initVisualizer()
     }
 
     initVisualizer() {
-        if(!AV) {
-            AV = AUDIO.VISUALIZER.getInstance({
+        if(!this.AV) {
+            this.AV = visualizer.VISUALIZER.getInstance({
                 autoplay: false,
                 loop: false,
-                audio: 'myAudio',
-                canvas: 'myCanvas',
+                audio: this.audio,
+                canvas: this.canvas,
                 ...lounge_default,
                 font: ['12px', 'Helvetica']
             });

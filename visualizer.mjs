@@ -1,6 +1,7 @@
-var AUDIO = AUDIO || {};
+const Visualizer = {};
 
-AUDIO.VISUALIZER = (function () {
+
+Visualizer.VISUALIZER = (function () {
     'use strict';
 
     var INTERVAL = null;
@@ -39,8 +40,8 @@ AUDIO.VISUALIZER = (function () {
         this.isPlaying = false;
         this.autoplay = autoplay || false;
         this.loop = loop || false;
-        this.audio = document.getElementById(audio) || {};
-        this.canvas = document.getElementById(canvas) || {};
+        this.audio = audio || {};
+        this.canvas = canvas || {};
         this.canvasCtx = this.canvas.getContext('2d') || null;
         this.author = this.audio.getAttribute('data-author') || '';
         this.title = this.audio.getAttribute('data-title') || '';
@@ -494,23 +495,4 @@ AUDIO.VISUALIZER = (function () {
     };
 })();
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     'use strict';
-
-//     AUDIO.VISUALIZER.getInstance({
-//         autoplay: true,
-//         loop: true,
-//         audio: 'myAudio',
-//         canvas: 'myCanvas',
-//         style: 'lounge',
-//         barWidth: 2,
-//         barHeight: 2,
-//         barSpacing: 7,
-//         barColor: '#cafdff',
-//         shadowBlur: 20,
-//         shadowColor: '#ffffff',
-//         font: ['12px', 'Helvetica']
-//     });
-// }, false);
-
-export default AUDIO
+export default Visualizer

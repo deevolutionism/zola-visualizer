@@ -1,6 +1,6 @@
  // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file
 
-var fileTypes = [
+ var fileTypes = [
     'image/jpeg',
     'image/png'
 ]
@@ -60,9 +60,30 @@ function updateImageDisplay(preview) {
     }
 }
 
+const template = document.createElement('template')
+template = `
+    <form method="post" enctype="multipart/form-data">
+        <div>
+            <label for="image_uploads">Choose images to upload (PNG, JPG)</label>
+            <input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple>
+        </div>
+        <div class="preview">
+            <p>No files currently selected for upload</p>
+        </div>
+        <div>
+            <button>Submit</button>
+        </div>
+    </form>
+`
+
 class ImageLoader extends HTMLElement {
     constructor() {
         super();
+
+        this._shadowRoot = this.attachShadow({ 'mode': 'open' })
+        this._shadowRoot.appendChild(template.content.cloneNode(true))
+        
+        
     }
 
 
@@ -70,4 +91,4 @@ class ImageLoader extends HTMLElement {
 
 
 
-export default { updateImageDisplay, returnFileSize, validFileType, fileTypes }
+export default { updateImageDisplay, returnFileSize, validFileType, fileTypes, ImageLoader }
