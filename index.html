@@ -9,6 +9,12 @@
             }
             body {
                 margin: 0;
+                background-color: #565656;
+                font-family: sans-serif;
+            }
+            .control-panel {
+                display: flex;
+                justify-content: space-around;
             }
             @media screen and (min-width: 420px) {
                 .vz-wrapper {
@@ -18,23 +24,25 @@
         </style>
     </head>
     <body>
-        <control-panel>
-            <slider-param name="radius" param-name="radius" value="0" min="50" max="1000"></slider-param>
-            <slider-param name="bar width" param-name="barWidth" value="0" min="1" max="10"></slider-param>
-            <drop-down options="vizStyles"></drop-down>
-        <control-panel connect="viz-1">
+        <div class="control-panel">
+                <play-button name="play"></play-button>
+                <slider-param name="radius" param-name="radius" value="0" min="50" max="1000"></slider-param>
+                <slider-param name="bar width" param-name="barWidth" value="0" min="1" max="10"></slider-param>
+                <slider-param name="bar height" param-name="barHeight" value="0" min="1" max="20"></slider-param>
+                <slider-param name="x offset" param-name="xOff" value="0" min="0" max="2000"></slider-param>
+                <slider-param name="y offset" param-name="xOff" value="0" min="0" max="2000"></slider-param>
+                <drop-down options="vizStyles"></drop-down>
+        </div>
         <music-viz id="viz-1" img-src="static/IDL-3K.jpg" audio-src="static/i-dont-like-teaser-1.wav"></music-viz>
 
-        <template id="control-panel">
+        <!-- <template id="control-panel">
             <style>
-                #control-panel-content {
-                    width: 200px;
+                #control-panel {
                     display: flex;
-                    flex-direction: column;
                 }
             </style>
             <slot name="content" id="control-panel-content"></slot>
-        </template>
+        </template> -->
 
 
     </body>

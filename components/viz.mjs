@@ -1,5 +1,5 @@
-import visualizer from '../visualizer.mjs'
-
+import Visualizer from '../Visualizer.mjs'
+import { store } from '../Store/store.mjs'
 
 let lounge_default = {
     style: 'lounge',
@@ -44,6 +44,31 @@ class Viz extends HTMLElement {
         this.container.style.backgroundImage = `url(${this.getAttribute('img-src')})`
         this.audio.src = this.getAttribute('audio-src')
         this.AV = null
+        
+        this.loop = this.getAttribute('loop') || false
+        this.autoplay = this.getAttribute('autoplay') || false
+        this.style
+
+        /* visualizer parameters. * = required
+            audio*, 
+            canvas*,
+            loop,
+            autoplay,
+            timer,
+            circumferenceSlice,
+            radius,
+            style,
+            width,
+            barWidth,
+            barHeight,
+            barColor,
+            barSpacing,
+            shadowBlur,
+            shadowColor,
+            font
+        */
+
+        
     }
 
     handleClick() {
@@ -52,15 +77,26 @@ class Viz extends HTMLElement {
     }
 
     initVisualizer() {
-        if(!this.AV) {
-            this.AV = visualizer.VISUALIZER.getInstance({
-                autoplay: false,
-                loop: false,
-                audio: this.audio,
-                canvas: this.canvas,
-                ...lounge_default,
-                font: ['12px', 'Helvetica']
-            });
+        if(!store.AV) {
+            let { width, barWidth, barHeight, barSpacing, xOff, yOff } = store
+            store.AV = new Visualizer(
+                {
+                    autoplay: true,
+                    loop: true,
+                    audio: this.audio,
+                    canvas: this.canvas,
+                    circumferenceSlize: 90,
+                    style: 'lounge',
+                    width,
+                    barWidth,
+                    barHeight,
+                    barSpacing,
+                    xOff,
+                    yOff
+                }
+            )
+            store.AV.init()
+            console.log(store.AV)
         }
     }
 

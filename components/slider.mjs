@@ -4,17 +4,17 @@ template.innerHTML = `
     :host {
         display: block;
     }
-    #canvas {
-        background-size: contain;
-        background-repeat: no-repeat;
+    input {
+        width: 40px;
     }
 </style>
 <div>
     <label id="label"></label>
     <input 
-        type="range" 
-        min="1" 
-        max="100" 
+        type="number"
+        step="2"
+        min="1"
+        max="100"
         value="50" 
         class="slider" 
         id="slider">
@@ -32,6 +32,8 @@ class Slider extends HTMLElement {
         super();
         this._shadowRoot = this.attachShadow({ 'mode': 'open' })
         this._shadowRoot.appendChild(template.content.cloneNode(true))
+
+        this.name = this.getAttribute('name')
         
         this.$slider = this._shadowRoot.querySelector('#slider')
         this.$sliderValue = this._shadowRoot.querySelector('#slider-value')
@@ -41,11 +43,18 @@ class Slider extends HTMLElement {
 
         this.$slider.oninput = (e) => {
             this.setAttribute('value', this.$slider.value)
+            this.dispatchEvent(new CustomEvent(this.name, { bubbles: true, detail: { data: this.$slider.value}}))
         }
+        
+
+        // this.slideUpdate = new Event(this.name, { detail: { data: this.$slider.value} })
+        
 
         this.getAttributeNames().forEach( attrKey => {
             this.$slider.setAttribute(attrKey, this.getAttribute(attrKey))
         })
+
+        
     }
 
     _renderSlider() {
@@ -53,6 +62,7 @@ class Slider extends HTMLElement {
     }
 
     handleSliderChange() {
+
         updateAttribute(this)
     }
 

@@ -1,6 +1,25 @@
-import {store} from './Store/Store.mjs'
-class Visualizer {
-    constructor({
+const Visualizer = {};
+
+
+Visualizer.VISUALIZER = (function () {
+    'use strict';
+
+    var INTERVAL = null;
+    var FFT_SIZE = 512;
+    var TYPE = {
+            'lounge': 'renderLounge',
+            'minimal': 'minimal',
+            'flatline': 'flatline'
+        };
+
+    /**
+     * @description
+     * Visualizer constructor.
+     *
+     * @param {Object} cfg
+     */
+
+    function Visualizer ({
         audio,
         canvas,
         loop,
@@ -16,7 +35,7 @@ class Visualizer {
         barSpacing,
         shadowBlur,
         shadowColor,
-        font 
+        font
     }) {
         this.isPlaying = false;
         this.autoplay = autoplay || false;
@@ -35,7 +54,7 @@ class Visualizer {
         this.circumferenceSlice = circumferenceSlice || 0  // 0.0 - 1.0
         this.audioSrc = null;
         this.duration = 0;
-        this.radius = radius || 300,
+        this.radius = radius || 200,
         this.minutes = '00';
         this.seconds = '00';
         this.style = style || 'lounge';
@@ -50,17 +69,7 @@ class Visualizer {
         this.gradient = null;
         this.xOff = 0;
         this.yOff = 0;
-        
-
-        this.INTERVAL = null
-        this.FFT_SIZE = 512
-        this.TYPE = {
-            'lounge': 'renderLounge',
-            'minimal': 'minimal',
-            'flatline': 'flatline',
-        }
     }
-
 
     /**
      * @description
@@ -68,7 +77,7 @@ class Visualizer {
      *
      * @return {Object}
      */
-    setContext() {
+    Visualizer.prototype.setContext = function () {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             this.ctx = new window.AudioContext();
@@ -76,7 +85,7 @@ class Visualizer {
         } catch (e) {
             console.info('Web Audio API is not supported.', e);
         }
-    }
+    };
 
     /**
      * @description
@@ -84,12 +93,12 @@ class Visualizer {
      *
      * @return {Object}
      */
-    setAnalyzer() {
+    Visualizer.prototype.setAnalyser = function () {
         this.analyser = this.ctx.createAnalyser();
         this.analyser.smoothingTimeConstant = 0.3;
-        this.analyser.fftSize = this.FFT_SIZE;
+        this.analyser.fftSize = FFT_SIZE;
         return this;
-    }
+    };
 
     /**
      * @description
@@ -97,10 +106,10 @@ class Visualizer {
      *
      * @return {Object}
      */
-    setFrequencyData() {
+    Visualizer.prototype.setFrequencyData = function () {
         this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
         return this;
-    }
+    };
 
     /**
      * @description
@@ -108,14 +117,14 @@ class Visualizer {
      *
      * @return {Object}
      */
-    setBufferSourceNode() {
+    Visualizer.prototype.setBufferSourceNode = function () {
         this.sourceNode = this.ctx.createBufferSource();
         this.sourceNode.loop = this.loop;
         this.sourceNode.connect(this.analyser);
         this.sourceNode.connect(this.ctx.destination);
 
         this.sourceNode.onended = function () {
-            clearInterval(this.INTERVAL);
+            clearInterval(INTERVAL);
             this.sourceNode.disconnect();
             this.resetTimer();
             this.isPlaying = false;
@@ -123,7 +132,7 @@ class Visualizer {
         }.bind(this);
 
         return this;
-    }
+    };
 
     /**
      * @description
@@ -131,10 +140,10 @@ class Visualizer {
      *
      * @return {Object}
      */
-    setMediaSource() {
+    Visualizer.prototype.setMediaSource = function () {
         this.audioSrc = this.audio.getAttribute('src');
         return this;
-    }
+    };
 
     /**
      * @description
@@ -142,7 +151,7 @@ class Visualizer {
      *
      * @return {Object}
      */
-    setCanvasStyles() {
+    Visualizer.prototype.setCanvasStyles = function () {
         this.gradient = this.canvasCtx.createLinearGradient(0, 0, 0, 300);
         this.gradient.addColorStop(1, this.barColor);
         this.canvasCtx.fillStyle = this.gradient;
@@ -151,8 +160,7 @@ class Visualizer {
         this.canvasCtx.font = this.font.join(' ');
         this.canvasCtx.textAlign = 'center';
         return this;
-    }
-
+    };
 
     /**
      * @description
@@ -160,7 +168,8 @@ class Visualizer {
      *
      * @return {Object}
      */
-    bindEvents() {
+    Visualizer.prototype.bindEvents = function () {
+
         document.addEventListener('click',  e => {
             if (e.target === this.canvas) {
                 e.stopPropagation();
@@ -172,15 +181,9 @@ class Visualizer {
             }
         });
 
-        console.log('attach update viz event')
         window.addEventListener('updateViz', e => {
+            console.log('render frame')
             this.renderFrame()
-        })
-
-        window.addEventListener('play', e => {
-            console.log('play')
-            this.loadSound()
-            // this.playSound()
         })
 
         if (this.autoplay) {
@@ -188,15 +191,13 @@ class Visualizer {
         }
 
         return this;
-    }
-
+    };
 
     /**
      * @description
      * Load sound file.
      */
-    loadSound() {
-        console.log('load sound')
+    Visualizer.prototype.loadSound = function () {
         var req = new XMLHttpRequest();
         req.open('GET', this.audioSrc, true);
         req.responseType = 'arraybuffer';
@@ -207,8 +208,7 @@ class Visualizer {
         }.bind(this);
 
         req.send();
-    }
-
+    };
 
     /**
      * @description
@@ -216,7 +216,7 @@ class Visualizer {
      *
      * @param  {Object} buffer
      */
-    playSound(buffer) {
+    Visualizer.prototype.playSound = function (buffer) {
         this.isPlaying = true;
 
         if (this.ctx.state === 'suspended') {
@@ -228,24 +228,24 @@ class Visualizer {
         this.resetTimer();
         this.startTimer();
         this.renderFrame();
-    }
+    };
 
     /**
      * @description
      * Pause current sound.
      */
-    pauseSound(){
+    Visualizer.prototype.pauseSound = function () {
         this.ctx.suspend();
         this.isPlaying = false;
-    }
+    };
 
-     /**
+    /**
      * @description
      * Start playing timer.
      */
-    startTimer() {
+    Visualizer.prototype.startTimer = function () {
         var _this = this;
-        this.interval = setInterval(function () {
+        INTERVAL = setInterval(function () {
             if (_this.isPlaying) {
                 var now = new Date(_this.duration);
                 var min = now.getHours();
@@ -255,16 +255,16 @@ class Visualizer {
                 _this.duration = now.setMinutes(sec + 1);
             }
         }, 1000);
-    }
+    };
 
     /**
      * @description
      * Reset time counter.
      */
-    resetTimer() {
+    Visualizer.prototype.resetTimer = function () {
         var time =  new Date(0, 0);
         this.duration = time.getTime();
-    }
+    };
 
     /**
      * @description
@@ -272,17 +272,16 @@ class Visualizer {
      *
      * @param  {Object} e
      */
-    onError() {
+    Visualizer.prototype.onError = function (e) {
         console.info('Error decoding audio file. -- ', e);
-    }
+    };
 
     /**
      * @description
      * Render frame on canvas.
      */
-    renderFrame() {
-        
-        window.requestAnimationFrame(this.renderFrame.bind(this));
+    Visualizer.prototype.renderFrame = function () {
+        requestAnimationFrame(this.renderFrame.bind(this));
         this.analyser.getByteFrequencyData(this.frequencyData);
 
         this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -291,14 +290,13 @@ class Visualizer {
         }
         this.renderText();
         this.renderByStyleType();
-        
-    }
+    };
 
     /**
      * @description
      * Render audio author and title.
      */
-    renderText() {
+    Visualizer.prototype.renderText = function () {
         var cx = this.canvas.width / 2;
         var cy = this.canvas.height / 2;
         var correction = 10;
@@ -309,16 +307,16 @@ class Visualizer {
         this.canvasCtx.textBaseline = 'bottom';
         this.canvasCtx.fillText(this.title, cx + correction, cy);
         this.canvasCtx.font = this.font.join(' ');
-    }
+    };
 
     /**
      * @description
      * Render audio time.
      */
-    renderTime() {
+    Visualizer.prototype.renderTime = function () {
         var time = this.minutes + ':' + this.seconds;
         this.canvasCtx.fillText(time, this.canvas.width / 2 + 10, this.canvas.height / 2 + 40);
-    }
+    };
 
     /**
      * @description
@@ -326,26 +324,27 @@ class Visualizer {
      *
      * @return {Function}
      */
-    renderByStyleType() {
-        return this[this.TYPE[this.style]]();
-    }
+    Visualizer.prototype.renderByStyleType = function () {
+        return this[TYPE[this.style]]();
+    };
 
-    randomNum(min, max) {
+    Visualizer.prototype.randomNum = function(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
 
-    affineMap(val,a,b,c,d) {
+    Visualizer.prototype.affineMap = function(val,a,b,c,d) {
+        // map min max input to a min max output value
         return (val - a) * ((d - c) / (b - a)) + c
     }
 
-    ampAverage(val) {
+    Visualizer.prototype.ampAverage = function(val) {
         let average = ( val.reduce( (x, x1) => x + x1) / val.length)
         return average
     }
 
-    minimal() {
+    Visualizer.prototype.minimal = function() {
         // console.log(this.frequencyData[this.randomNum(0,this.frequencyData.length-1)])
         var cx = this.canvas.width / 2
         var cy = this.canvas.height / 2
@@ -369,7 +368,9 @@ class Visualizer {
         // this.canvasCtx.restore()
     }
 
-    flatline() {
+    
+
+    Visualizer.prototype.flatline = function() {
         var cx = this.canvas.width / 2
         var cy = this.canvas.height / 2
         var radius = this.radius
@@ -404,14 +405,15 @@ class Visualizer {
                 this.canvasCtx.fillRect(x1-29, y, w, h);
             this.canvasCtx.restore();
 
-        } 
+        }
+
     }
 
     /**
      * @description
      * Render lounge style type.
      */
-    renderLounge() {
+    Visualizer.prototype.renderLounge = function () {
         // var cx = this.canvas.width / 2;
         // var cy = this.canvas.height / 2;
         var cx = this.xOff;
@@ -438,20 +440,68 @@ class Visualizer {
                 this.canvasCtx.fillRect(x, y, w, h);
             this.canvasCtx.restore();
         }
-        
+    };
+
+    /**
+     * @description
+     * Create visualizer object instance.
+     *
+     * @param  {Object} cfg
+     * {
+     *     autoplay: <Bool>,
+     *     loop: <Bool>,
+     *     audio: <String>,
+     *     canvas: <String>,
+     *     style: <String>,
+     *     barWidth: <Integer>,
+     *     barHeight: <Integer>,
+     *     barSpacing: <Integer>,
+     *     barColor: <String>,
+     *     shadowBlur: <Integer>,
+     *     shadowColor: <String>,
+     *     font: <Array>
+     * }
+     * @return {Function}
+     * @private
+     */
+    function _createVisualizer (cfg) {
+        var visualizer = new Visualizer(cfg);
+
+        return function () {
+            visualizer
+                .setContext()
+                .setAnalyser()
+                .setFrequencyData()
+                .setBufferSourceNode()
+                .setMediaSource()
+                .setCanvasStyles()
+                .bindEvents();
+
+            return visualizer;
+        };
     }
 
-    init() {
-        console.log('init visualizer')
-        this.setContext()
-            .setAnalyzer()
-            .setFrequencyData()
-            .setBufferSourceNode()
-            .setMediaSource()
-            .setCanvasStyles()
-            .bindEvents();
+    /**
+     * @description
+     * Get visualizer instance.
+     *
+     * @param  {Object} cfg
+     * @return {Object}
+     * @public
+     */
+    function getInstance (cfg) {
+        return _createVisualizer(cfg)();
     }
 
-}
+    /**
+     * @description
+     * Visualizer module API.
+     *
+     * @public
+     */
+    return {
+        getInstance: getInstance
+    };
+})();
 
 export default Visualizer
