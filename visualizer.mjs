@@ -1,4 +1,5 @@
 import {store} from './Store/Store.mjs'
+
 class Visualizer {
     constructor({
         audio,
@@ -59,6 +60,7 @@ class Visualizer {
             'minimal': 'minimal',
             'flatline': 'flatline',
         }
+        this.capturer = null
     }
 
 
@@ -153,6 +155,13 @@ class Visualizer {
         return this;
     }
 
+    updateConfig() {
+        let { radius, xOff, yOff } = store
+        this.radius = radius
+        this.xOff = xOff
+        this.yOff = yOff
+    }
+
 
     /**
      * @description
@@ -161,6 +170,16 @@ class Visualizer {
      * @return {Object}
      */
     bindEvents() {
+
+        // this.capturer = new CCapture({
+        //     format: 'webm',
+        //     framerate: 24,
+        //     quality: 100,
+        //     verbose: true,
+        //     timeLimit: 5
+        // });
+        // console.log(this.capturer)
+
         document.addEventListener('click',  e => {
             if (e.target === this.canvas) {
                 e.stopPropagation();
@@ -173,13 +192,14 @@ class Visualizer {
         });
 
         console.log('attach update viz event')
-        window.addEventListener('updateViz', e => {
+        window.addEventListener('update-params', e => {
             this.renderFrame()
         })
 
         window.addEventListener('play', e => {
             console.log('play')
             this.loadSound()
+            this.updateConfig()
             // this.playSound()
         })
 
@@ -200,9 +220,11 @@ class Visualizer {
         var req = new XMLHttpRequest();
         req.open('GET', this.audioSrc, true);
         req.responseType = 'arraybuffer';
+        console.log('loading')
         this.canvasCtx.fillText('Loading...', this.canvas.width / 2 + 10, this.canvas.height / 2);
 
         req.onload = function () {
+            console.log('finished')
             this.ctx.decodeAudioData(req.response, this.playSound.bind(this), this.onError.bind(this));
         }.bind(this);
 
@@ -227,6 +249,8 @@ class Visualizer {
         this.sourceNode.start(0);
         this.resetTimer();
         this.startTimer();
+        // this.capturer.start();
+        console.log('begin capture')
         this.renderFrame();
     }
 
@@ -281,8 +305,8 @@ class Visualizer {
      * Render frame on canvas.
      */
     renderFrame() {
-        
         window.requestAnimationFrame(this.renderFrame.bind(this));
+        // this.capturer.capture( this.canvas )
         this.analyser.getByteFrequencyData(this.frequencyData);
 
         this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);

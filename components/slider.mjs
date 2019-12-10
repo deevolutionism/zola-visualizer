@@ -34,6 +34,7 @@ class Slider extends HTMLElement {
         this._shadowRoot.appendChild(template.content.cloneNode(true))
 
         this.name = this.getAttribute('name')
+        this.paramName = this.getAttribute('param-name')
         
         this.$slider = this._shadowRoot.querySelector('#slider')
         this.$sliderValue = this._shadowRoot.querySelector('#slider-value')
@@ -43,7 +44,7 @@ class Slider extends HTMLElement {
 
         this.$slider.oninput = (e) => {
             this.setAttribute('value', this.$slider.value)
-            this.dispatchEvent(new CustomEvent(this.name, { bubbles: true, detail: { data: this.$slider.value}}))
+            this.dispatchEvent(new CustomEvent('update-params', { bubbles: true, detail: { data: this.$slider.value, param: this.paramName }}))
         }
         
 

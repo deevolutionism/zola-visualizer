@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="assets/style.css">
         <style>
             @font-face {
                 font-family: 'Blackout';
@@ -25,15 +26,22 @@
     </head>
     <body>
         <div class="control-panel">
+                <reset-button></reset-button>
                 <play-button name="play"></play-button>
                 <slider-param name="radius" param-name="radius" value="0" min="50" max="1000"></slider-param>
                 <slider-param name="bar width" param-name="barWidth" value="0" min="1" max="10"></slider-param>
                 <slider-param name="bar height" param-name="barHeight" value="0" min="1" max="20"></slider-param>
                 <slider-param name="x offset" param-name="xOff" value="0" min="0" max="2000"></slider-param>
-                <slider-param name="y offset" param-name="xOff" value="0" min="0" max="2000"></slider-param>
+                <slider-param name="y offset" param-name="yOff" value="0" min="0" max="2000"></slider-param>
                 <drop-down options="vizStyles"></drop-down>
         </div>
-        <music-viz id="viz-1" img-src="static/IDL-3K.jpg" audio-src="static/i-dont-like-teaser-1.wav"></music-viz>
+        <div class="wrap">
+
+                <div class="example-one" data-text="I DONT LIKE">I DONT LIKE</div> 
+                
+              </div>
+        
+        <music-viz id="viz-1" img-src="static/IDL-3K-blur.jpg" audio-src="static/i-dont-like-teaser-1.wav"></music-viz>
 
         <!-- <template id="control-panel">
             <style>
@@ -46,5 +54,6 @@
 
 
     </body>
+    <script src="CCapture.all.min.js"></script>
     <script type="module" src="app.mjs"></script>
 </html>

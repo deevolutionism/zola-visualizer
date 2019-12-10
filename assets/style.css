@@ -1,0 +1,172 @@
+/* 
+  MIXIN(S)
+  =================
+ https://codepen.io/chriscoyier/pen/XWrNyZy?editors=0110
+
+
+  (TEXT) PARAMS
+  =================
+  1. Namespace
+  2. Intensity
+  3. Text color
+  4. Background color (flat)
+  5. Highlight #1 color
+  6. Highlight #2 color
+  7. Width (px)
+  8. Height (px)
+*/
+.example-one {
+    font-size: 64px;
+    color: white;
+    position: relative;
+  }
+  @keyframes example-one-anim-1 {
+    0% {
+      clip-path: inset(89% 0 11% 0);
+    }
+    5.8823529412% {
+      clip-path: inset(17% 0 43% 0);
+    }
+    11.7647058824% {
+      clip-path: inset(38% 0 33% 0);
+    }
+    17.6470588235% {
+      clip-path: inset(58% 0 2% 0);
+    }
+    23.5294117647% {
+      clip-path: inset(87% 0 6% 0);
+    }
+    29.4117647059% {
+      clip-path: inset(13% 0 22% 0);
+    }
+    35.2941176471% {
+      clip-path: inset(38% 0 24% 0);
+    }
+    41.1764705882% {
+      clip-path: inset(38% 0 56% 0);
+    }
+    47.0588235294% {
+      clip-path: inset(60% 0 18% 0);
+    }
+    52.9411764706% {
+      clip-path: inset(54% 0 6% 0);
+    }
+    58.8235294118% {
+      clip-path: inset(83% 0 7% 0);
+    }
+    64.7058823529% {
+      clip-path: inset(20% 0 32% 0);
+    }
+    70.5882352941% {
+      clip-path: inset(47% 0 33% 0);
+    }
+    76.4705882353% {
+      clip-path: inset(87% 0 5% 0);
+    }
+    82.3529411765% {
+      clip-path: inset(21% 0 55% 0);
+    }
+    88.2352941176% {
+      clip-path: inset(80% 0 3% 0);
+    }
+    94.1176470588% {
+      clip-path: inset(51% 0 7% 0);
+    }
+    100% {
+      clip-path: inset(100% 0 1% 0);
+    }
+  }
+  @keyframes example-one-anim-2 {
+    0% {
+      clip-path: inset(15% 0 23% 0);
+    }
+    5.8823529412% {
+      clip-path: inset(93% 0 1% 0);
+    }
+    11.7647058824% {
+      clip-path: inset(92% 0 3% 0);
+    }
+    17.6470588235% {
+      clip-path: inset(47% 0 10% 0);
+    }
+    23.5294117647% {
+      clip-path: inset(3% 0 5% 0);
+    }
+    29.4117647059% {
+      clip-path: inset(78% 0 20% 0);
+    }
+    35.2941176471% {
+      clip-path: inset(55% 0 42% 0);
+    }
+    41.1764705882% {
+      clip-path: inset(14% 0 19% 0);
+    }
+    47.0588235294% {
+      clip-path: inset(49% 0 22% 0);
+    }
+    52.9411764706% {
+      clip-path: inset(76% 0 4% 0);
+    }
+    58.8235294118% {
+      clip-path: inset(91% 0 9% 0);
+    }
+    64.7058823529% {
+      clip-path: inset(26% 0 6% 0);
+    }
+    70.5882352941% {
+      clip-path: inset(57% 0 34% 0);
+    }
+    76.4705882353% {
+      clip-path: inset(49% 0 38% 0);
+    }
+    82.3529411765% {
+      clip-path: inset(32% 0 62% 0);
+    }
+    88.2352941176% {
+      clip-path: inset(91% 0 1% 0);
+    }
+    94.1176470588% {
+      clip-path: inset(55% 0 36% 0);
+    }
+    100% {
+      clip-path: inset(79% 0 21% 0);
+    }
+  }
+  .example-one::before, .example-one::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background:transparent;
+  }
+  .example-one::after {
+    left: 2px;
+    text-shadow: 2px 0 red;
+    animation: example-one-anim-1 2s infinite linear alternate-reverse;
+  }
+  .example-one::before {
+    left: -2px;
+    text-shadow: 3px 0 blue;
+    animation: example-one-anim-2 3s infinite linear alternate-reverse;
+  }
+  
+
+  
+  body {
+    background: black;
+    font-family: Sans-serif;
+    padding: 20px;
+  }
+  
+  .wrap {
+    width: 400px;
+    height: 300px;
+    margin: 0 auto;
+    text-align: center;
+    position: absolute;
+    top: 632px;
+    left: 330px;
+
+  }
+  

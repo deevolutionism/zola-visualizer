@@ -17,11 +17,12 @@ const template = document.createElement('template')
 template.innerHTML = `
 <style>
     #container {
-        background-size: cover;
+        background-size: contain;
         background-repeat: no-repeat;
     }
 </style>
 <div id="container">
+    <p id="title" class="gitch">title</p>
     <audio id="audio" src=""></audio>
     <canvas id="canvas" width="1024" height="1024"></canvas>
 </div>
@@ -81,7 +82,7 @@ class Viz extends HTMLElement {
             let { width, barWidth, barHeight, barSpacing, xOff, yOff } = store
             store.AV = new Visualizer(
                 {
-                    autoplay: true,
+                    autoplay: false,
                     loop: true,
                     audio: this.audio,
                     canvas: this.canvas,
