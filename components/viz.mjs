@@ -22,7 +22,6 @@ template.innerHTML = `
     }
 </style>
 <div id="container">
-    <p id="title" class="gitch">title</p>
     <audio id="audio" src=""></audio>
     <canvas id="canvas" width="1024" height="1024"></canvas>
 </div>
